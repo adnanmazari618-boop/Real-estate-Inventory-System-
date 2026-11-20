@@ -22,3 +22,13 @@ because of a peer-dependency conflict between Vite 8 / esbuild and
 Tailwind. The `.npmrc` in this repo sets `legacy-peer-deps=true`,
 so Railway's `npm install` now succeeds. This was tested locally:
 `npm install --legacy-peer-deps` then `npm run build` succeeds.
+
+## 2026-11-20 update: Nixpacks build failure
+
+Railway's Nixpacks builder failed at:
+`nix-env -if .nixpacks/nixpkgs-*.nix && nix-collect-garbage -d`
+exit code 1 — before `npm install` even ran.
+
+Fix: a `Dockerfile` was added at the repo root. Railway always
+builds with a Dockerfile when it finds one, so Nixpacks is bypassed
+completely. `railway.json` now sets `builder = "DOCKERFILE"`.
